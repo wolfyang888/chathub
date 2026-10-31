@@ -27,6 +27,10 @@ export default defineManifest(async () => {
       'https://*.poe.com/',
       'https://*.anthropic.com/',
       'https://*.claude.ai/',
+      'https://chatgpt.com/*',
+      'https://gemini.google.com/*',
+      'https://chat.deepseek.com/*',
+      'https://www.doubao.com/*',
     ],
     optional_host_permissions: ['https://*/*', 'wss://*/*'],
     permissions: ['storage', 'unlimitedStorage', 'sidePanel', 'declarativeNetRequestWithHostAccess', 'scripting'],
@@ -34,6 +38,15 @@ export default defineManifest(async () => {
       {
         matches: ['https://chat.openai.com/*'],
         js: ['src/content-script/chatgpt-inpage-proxy.ts'],
+      },
+      {
+        matches: [
+          'https://chatgpt.com/*',
+          'https://gemini.google.com/app*',
+          'https://chat.deepseek.com/*',
+          'https://www.doubao.com/chat*',
+        ],
+        js: ['src/content-script/web-chat-draft.ts'],
       },
     ],
     commands: {

@@ -17,6 +17,7 @@ import Tooltip from '../Tooltip'
 import ChatMessageInput from './ChatMessageInput'
 import ChatMessageList from './ChatMessageList'
 import ChatbotName from './ChatbotName'
+import PortableContinueDialog from './PortableContinueDialog'
 import WebAccessCheckbox from './WebAccessCheckbox'
 
 interface Props {
@@ -38,6 +39,7 @@ const ConversationPanel: FC<Props> = (props) => {
   const marginClass = 'mx-5'
   const [showHistory, setShowHistory] = useState(false)
   const [showShareDialog, setShowShareDialog] = useState(false)
+  const [showPortableContinue, setShowPortableContinue] = useState(false)
 
   const context: ConversationContextValue = useMemo(() => {
     return {
@@ -105,6 +107,16 @@ const ConversationPanel: FC<Props> = (props) => {
           </div>
           <WebAccessCheckbox botId={props.botId} />
           <div className="flex flex-row items-center gap-3">
+            <Tooltip content="Continue this conversation in a signed-in web AI">
+              <button
+                type="button"
+                className="text-xs font-semibold text-primary-blue hover:opacity-70 transition-opacity disabled:text-light-text"
+                disabled={!props.messages.length || props.generating}
+                onClick={() => setShowPortableContinue(true)}
+              >
+                Continue in web
+              </button>
+            </Tooltip>
             <Tooltip content={t('Share conversation')}>
               <motion.img
                 src={shareIcon}
@@ -154,6 +166,15 @@ const ConversationPanel: FC<Props> = (props) => {
         <ShareDialog open={true} onClose={() => setShowShareDialog(false)} messages={props.messages} />
       )}
       {showHistory && <HistoryDialog botId={props.botId} open={true} onClose={() => setShowHistory(false)} />}
+      {showPortableContinue && (
+        <PortableContinueDialog
+          botId={props.botId}
+          botName={botInfo.name}
+          messages={props.messages}
+          open={true}
+          onClose={() => setShowPortableContinue(false)}
+        />
+      )}
     </ConversationContext.Provider>
   )
 }
